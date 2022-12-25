@@ -6,8 +6,8 @@ const checkAuth = require('../middleware/check-auth');
 
 
 router.route('/')
-    .get(checkAuth, usersController.getAllUsers)
-    .delete(usersController.deleteUser);
+    .get(usersController.getAllUsers)
+    .delete(checkAuth, usersController.deleteUser);
 
 router.route('/update').patch(checkAuth,usersController.updateUser); // Update user details
 

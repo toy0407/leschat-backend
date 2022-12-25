@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 //@route GET /users
 //@access Private
 const getAllUsers = asyncHandler(async(req,res)=>{
-    const users = await User.find().select('-password').lean();
+    const users = await User.find().select('-password').select('-_id').lean();
     if(!users?.length){
         return res.status(400).json({message: 'No users found'});
     }
@@ -24,7 +24,7 @@ const createNewUser = asyncHandler(async(req,res)=>{
     const {username, name, password, phoneNumber, about, email, image, lastSeen} = req.body;
     console.log(name);
     //Confirm data
-    if(!username || !password || !name || !email) {
+    if(!username || !password || !name || !email || !username.length>=4 || !password.length>=4 || !name.length>=1) {
         return res.status(400).json({message:'All fields are required'});
     }
     //Check for duplicates
@@ -63,11 +63,11 @@ const loginUser = asyncHandler(async(req,res)=>{
 
     //Check if user exists
     const foundUser = await User.findOne({email}).exec();
-    if(!foundUser) return res.status(401).json({message:`Unauthorized`});
+    if(!foundUser) return res.status(401).json({message:`User does not exists`});
 
     //Match password
     const match = await bcrypt.compare(password,foundUser.password);
-    if(!match) return res.status(401).json({message:`Unauthorized`});
+    if(!match) return res.status(401).json({message:`Wrong Password`});
 
     //Get JWT token
     const token = await jwt.sign(
@@ -83,7 +83,8 @@ const loginUser = asyncHandler(async(req,res)=>{
     
     return res.status(200).json({
         message: `Login Successful`,
-        token: token
+        token: token,
+        userId: foundUser._id
     });
 
 })
@@ -99,27 +100,33 @@ const updateUser = asyncHandler(async(req,res)=>{
     const {id, username, name, password, phoneNumber, about, email, image, lastSeen} = req.body;
 
     //Confirm data
-    if(!id|| !username || !password || !email) {
+    if(!id || !password) {
         return res.status(400).json({message:'All fields are required'});
     }
 
+    if(email) return res.status(400).json({message:`Email cannot be changed`});
+
     const user = await User.findById(id).exec();
+
     if(!user){
         return res.status(400).json({message:`User not found`});
     }
     
     //Check for duplicates
-    const duplicate = await User.findOne({username}).lean().exec();
-    //Allow duplicates to the original user
-    if(duplicate && duplicate?._id.toString()!==id){
-        return res.status(409).json({message:`Duplicate username`});
+    if(username?.length>=1){
+        const duplicate = await User.findOne({username}).lean().exec();
+        //Allow duplicates to the original user
+        if(duplicate && duplicate?._id.toString()!==id){
+            return res.status(409).json({message:`Duplicate username`});
     }
+    }
+    
+
     //TODO: Manage user updates
-    user.username = username;
+    if(username) {user.username = username;}
     if(name) {user.name = name;}
     if(phoneNumber) {user.phoneNumber = phoneNumber;}
     if(about) {user.about = about;}
-    if(email) {user.email = email;}
     if(image) {user.image = image;}
     if(lastSeen) {user.lastSeen = lastSeen;} 
 

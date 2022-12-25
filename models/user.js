@@ -34,9 +34,14 @@ const userSchema = new mongoose.Schema({
     lastSeen:{
         type: String,
     },
-    //TODO: ChatsList[]
-    //TODO: GroupsList[]
-    
+    chatsList:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Chat'
+    }],
+    groupsList: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Group'
+    }]
 },
 {
     timestamps : true
