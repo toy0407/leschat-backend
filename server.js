@@ -6,6 +6,15 @@ const mongoose = require('mongoose');
 const {logger, logEvents} = require('./middleware/logger');
 const connectDB = require('./config/dbConnection');
 const server = http.createServer(app);
+const io = require('socket.io')(server);
+
+//Socket
+io.on('connection',(socket)=>{
+    io.on('send-message',()=>{
+
+    })
+});
+
 
 
 console.log(process.env.NODE_ENV);
@@ -18,14 +27,15 @@ app.use(logger);
 //Routes
 
 app.use('/users',require('./routes/userRoutes'));
+app.use('/chats', require('./routes/chatRoutes'));
 
 
 
 //Server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 mongoose.connection.once('open', () => {
     console.log('Connected to MongoDB')
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+    server.listen(PORT, () => console.log(`Server running on port ${PORT}`))
 })
 
 mongoose.connection.on('error', err => {

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const contentSchema = new mongoose.Schema({
     _contentId: {
-        type : mongoose.Schema.Types.objectId
+        type : mongoose.Schema.Types.ObjectId
     },
     text: {
         type : String,

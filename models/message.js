@@ -8,14 +8,14 @@ const messageSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    chatID:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Chat'
-    },
-    groupId:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Group'
-    },
+    // chatID:{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Chat'
+    // },
+    // groupId:{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Group'
+    // },
     contentId:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Content'
