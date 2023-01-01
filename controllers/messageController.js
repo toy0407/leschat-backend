@@ -9,6 +9,30 @@ const message = require('../models/message');
 //@route GET /
 //@access Private
 const getMessages = asyncHandler(async(req,res)=>{
+    const {chatId} = req.body;
+
+    if(!chatId?.length>0) return res.status(400).json({message: "ChatId is required"});
+
+    //Fetch chat using chatId
+    const chat = await Chat.findById(chatId);
+
+
+    //Fetch all messages from the chat's messageList
+
+    const messagesList = [];
+
+    for(const messageId of chat.messagesList){
+        const message = await Message.findById(messageId);
+        messagesList.push(message);
+    }
+
+    if(!messagesList) return res.status(400).json({message:"Failed to fetch messages"});
+    return res.status(200).json({
+        message: "Success",
+        messagesList: messagesList
+    })
+
+
 
 })
 
