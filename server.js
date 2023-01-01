@@ -28,7 +28,7 @@ app.use(logger);
 
 app.use('/users',require('./routes/userRoutes'));
 app.use('/chats', require('./routes/chatRoutes'));
-
+app.use('/messages', require('./routes/messageRoutes'));
 
 
 //Server
