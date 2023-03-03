@@ -15,6 +15,21 @@ const getAllUsers = asyncHandler(async(req,res)=>{
     res.json(users);
 })
 
+//@desc Get user by id
+//@route GET /users
+//@access Private
+//TODO
+// const getUserById = asyncHandler(async(req,res)=>{
+//     const {userId} = req.body;
+//     if(!userId) return res.status(400).json({message:'userId required'});
+
+//     const user = await User.findOne({userId}).select('-password').lean();
+//     if(!user?.length){
+//         return res.status(400).json({message: 'No users found'});
+//     }
+//     res.json(user);
+// })
+
 
 
 //@desc Create new user

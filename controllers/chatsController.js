@@ -84,14 +84,14 @@ const createChat = asyncHandler(async(req,res)=>{
 //@route GET /
 //@access Private
 const getAllChats = asyncHandler(async(req,res)=>{
-    const {userId} = req.body;
+    const {userid} = req.headers;
     
     // Checking if userId is null
-    if(!userId?.length>0) return res.status(400).json({
+    if(!userid?.length>0) return res.status(400).json({
         message: 'UserId not specified',
     })
 
-    const user = await User.findById(userId).exec();
+    const user = await User.findById(userid).exec();
     if(!user){
         return res.status(400).json({message:'User not found'});
     }
